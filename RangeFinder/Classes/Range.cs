@@ -8,7 +8,7 @@ namespace RangeFinder.Classes
 {
     class Range
     {
-        public Range(int rangeNumber)
+        public Range(long rangeNumber)
         {
             this.RangeNumber = Convert.ToInt32(rangeNumber.ToString().Substring(4));
             this.Length = Convert.ToInt32(rangeNumber.ToString().Length);
@@ -22,13 +22,13 @@ namespace RangeFinder.Classes
 
         public int RangeNumber { get; set; }
 
-        public List<int> RangeList { get; set; }
+        public List<long> RangeList { get; set; }
 
-        public List<int> RangeBuilder(int num, int length, string prefix)
+        public List<long> RangeBuilder(int num, int length, string prefix)
         {
             List<int> rangeList = new List<int>();
-            List<int> fullNumberList =new List<int>();
-            int fullNumber;
+            List<long> fullNumberList =new List<long>();
+            long fullNumber;
             int upperBound;
 
             //switch on the initial range length, before sub-stringing down to the short form
@@ -51,7 +51,7 @@ namespace RangeFinder.Classes
                     {
                         var y = x.ToString();
                         var z = prefix + y;
-                        fullNumber = Convert.ToInt32(z);
+                        fullNumber = Convert.ToInt64(z);
                         fullNumberList.Add(fullNumber);
                     }
 
@@ -70,7 +70,7 @@ namespace RangeFinder.Classes
                     {
                         var y = x.ToString();
                         var z = prefix + y;
-                        fullNumber = Convert.ToInt32(z);
+                        fullNumber = Convert.ToInt64(z);
                         fullNumberList.Add(fullNumber);
                     }
 
@@ -84,7 +84,7 @@ namespace RangeFinder.Classes
                     {
                         var y = x.ToString();
                         var z = prefix + y;
-                        fullNumber = Convert.ToInt32(z);
+                        fullNumber = Convert.ToInt64(z);
                         fullNumberList.Add(fullNumber);
                     }
 
