@@ -10,7 +10,7 @@ namespace RangeFinder.Classes
     {
         
 
-        public User(string userName, int phoneNumber, bool listed)
+        public User(string userName, long phoneNumber, bool listed)
         {
             this.UserName = userName;
             this.PhoneNumber = phoneNumber;
@@ -21,6 +21,6 @@ namespace RangeFinder.Classes
 
         public string UserName { get; set; }
 
-        public int PhoneNumber { get; set; }
+        public long PhoneNumber { get; set; }
     }
 }
