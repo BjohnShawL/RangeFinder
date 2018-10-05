@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,13 +24,11 @@ namespace RangeFinder
 
         }
         
-        private void ImportUserCsv_click(object sender, System.EventArgs e)
-        {//Instantiate two lists on button click
-            List<long> RangeOutList = new List<long>();
-            List<User>UserOutList = new List<User>();
-            List<User>fullOutList = new List<User>();
-
-            List<KeyValuePair<string,string>> finalOut = new List<KeyValuePair<string, string>>();
+        private void ImportUserCsv_click(object sender, EventArgs e)
+        {//Instantiate three lists on button click
+            List<long> rangeOutList = new List<long>();
+            List<User>userOutList = new List<User>();
+            List<User> finalOut;
 
             //check for data in the two boxes - if either is null, prompt for a filepath
 
@@ -39,17 +38,17 @@ namespace RangeFinder
 
                 foreach (var rNum in reader.IntCsvList)
                 {
-                   var _range = new Range(rNum);
-                    foreach (var _rNum in _range.RangeList)
+                   var range = new Range(rNum);
+                    foreach (var _rNum in range.RangeList)
                     {
-                        RangeOutList.Add(_rNum);
+                        rangeOutList.Add(_rNum);
                     }
                 }
 
                 foreach (var rUse in reader.StrCsvList)
                 {
-                    var _user = new User(rUse.Key,rUse.Value,false);
-                    UserOutList.Add(_user);
+                    var user = new User(rUse.Key,rUse.Value,false);
+                    userOutList.Add(user);
                 }
 
                 //foreach (var user in reader.StrCsvList)
@@ -70,32 +69,11 @@ namespace RangeFinder
                 //    }
                 //}
 
-                foreach (var x in RangeOutList)
-                {
-                    var unUser = new User("Unassigned",x,false);
-                    
-                    foreach (var user in UserOutList)
-                    {
-                        if (user.PhoneNumber == unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
-                        {
-                            fullOutList.Add(user);
-                            user.Listed = true;
-                            /*fullOutList.Add(unUser)*/;
-                          
-                        }
-                        else if (user.PhoneNumber != unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
-                        {
-                          fullOutList.Add(unUser);
-                            unUser.Listed = true;
-                            
-                        }
-                        else { break;}
-                    }
-                }
+                finalOut = ListModulo(userOutList, rangeOutList);
 
                 string outfile = string.Join
                 (
-                    Environment.NewLine, fullOutList.Select(d => d.UserName + "," + d.PhoneNumber)
+                    Environment.NewLine, finalOut.Select(d => d.UserName + "," + d.PhoneNumber)
                 );
                 System.IO.File.WriteAllText("C: \\Users\\Ben.Liddle\\Desktop\\Scripting\\rangetest.csv", outfile);
             }
@@ -112,7 +90,7 @@ namespace RangeFinder
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Label1_Click(object sender, EventArgs e)
         {
 
         }
@@ -121,25 +99,55 @@ namespace RangeFinder
 
         private void UserListBrowser_Click(object sender, EventArgs e)
         {
-            DialogResult result = this.openFileDialog1.ShowDialog();
+            DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.UserListPath.Text = this.openFileDialog1.FileName;
+                UserListPath.Text = openFileDialog1.FileName;
             }
         }
 
         private void RangeListBrowser_Click(object sender, EventArgs e)
         {
-            DialogResult result = this.openFileDialog1.ShowDialog();
+            DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.RangeListPath.Text = this.openFileDialog1.FileName;
+                RangeListPath.Text = openFileDialog1.FileName;
             }
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private void OpenFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
 
         }
+
+        public List<User> ListModulo(List<User> ulist, List<long> rList)
+        {
+            List<User> fullOutList = new List<User>();
+
+            foreach (var x in rList)
+            {
+                var unUser = new User("Unassigned", x, false);
+
+                foreach (var user in ulist)
+                {
+                    if (user.PhoneNumber == unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
+                    {
+                        fullOutList.Add(user);
+                        user.Listed = true;
+                        /*fullOutList.Add(unUser)*/
+                    }
+                    else if (user.PhoneNumber != unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
+                    {
+                        fullOutList.Add(unUser);
+                        unUser.Listed = true;
+
+                    }
+                    else { break; }
+                }
+            }
+
+            return fullOutList;
+        }
+
     }
 }

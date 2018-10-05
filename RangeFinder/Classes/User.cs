@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RangeFinder.Classes
 {
-    class User
+    public class User
     {
         
 
