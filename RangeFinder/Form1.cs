@@ -24,7 +24,7 @@ namespace RangeFinder
 
         }
 
-        private void ImportUserCsv_click(object sender, EventArgs e)
+        private void Execute_click(object sender, EventArgs e)
         {//Instantiate three lists on button click
             List<long> rangeOutList = new List<long>();
             List<User> userOutList = new List<User>();
@@ -33,7 +33,11 @@ namespace RangeFinder
 
             //check for data in the two boxes - if either is null, prompt for a filepath
 
-            if (UserListPath.Text != "" && RangeListPath.Text != "")
+            if (UserListPath.Text == "" || RangeListPath.Text == "" || OutPath.Text == "")
+            {
+                MessageBox.Show(@"Please enter the path of the Csv");
+            }
+            else
             {
                 CsvReader reader = new CsvReader(UserListPath.Text, RangeListPath.Text);
 
@@ -71,16 +75,12 @@ namespace RangeFinder
                 //}
 
                 finalOut = ListModulo(rangeOutList, userOutList, fullOutList);
-
+                finalOut.Sort((x, y) => x.PhoneNumber.CompareTo(y.PhoneNumber));
                 string outfile = string.Join
                 (
-                    Environment.NewLine, finalOut.Select(d => d.UserName + "," + d.PhoneNumber)
+                    Environment.NewLine, finalOut.Select(d => d.UserName + "," + "0" + d.PhoneNumber.ToString())
                 );
-                System.IO.File.WriteAllText("C: \\Users\\Ben.Liddle\\Desktop\\Scripting\\rangetest.csv", outfile);
-            }
-            else
-            {
-                MessageBox.Show(@"Please enter the path of the Csv");
+                System.IO.File.WriteAllText(OutPath.Text, outfile);
             }
         }
 
@@ -113,6 +113,15 @@ namespace RangeFinder
             if (result == DialogResult.OK)
             {
                 RangeListPath.Text = openFileDialog1.FileName;
+            }
+        }
+
+        private void OutPathBrowser_Click(object sender, EventArgs e)
+        {
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                OutPath.Text = openFileDialog1.FileName;
             }
         }
 
