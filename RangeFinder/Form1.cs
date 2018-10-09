@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,12 +24,21 @@ namespace RangeFinder
 
         }
 
+
         private void Execute_click(object sender, EventArgs e)
         {//Instantiate three lists on button click
             List<long> rangeOutList = new List<long>();
             List<User> userOutList = new List<User>();
             List<User> finalOut;
             List<User> fullOutList = new List<User>();
+
+        
+        private void ImportUserCsv_click(object sender, EventArgs e)
+        {//Instantiate three lists on button click
+            List<long> rangeOutList = new List<long>();
+            List<User>userOutList = new List<User>();
+            List<User> finalOut;
+
 
             //check for data in the two boxes - if either is null, prompt for a filepath
 
@@ -43,7 +52,9 @@ namespace RangeFinder
 
                 foreach (var rNum in reader.IntCsvList)
                 {
+
                     var range = new Range(rNum);
+
                     foreach (var _rNum in range.RangeList)
                     {
                         rangeOutList.Add(_rNum);
@@ -52,7 +63,9 @@ namespace RangeFinder
 
                 foreach (var rUse in reader.StrCsvList)
                 {
+
                     var user = new User(rUse.Key, rUse.Value, false);
+
                     userOutList.Add(user);
                 }
 
@@ -74,11 +87,15 @@ namespace RangeFinder
                 //    }
                 //}
 
+
                 finalOut = ListModulo(rangeOutList, userOutList, fullOutList);
                 finalOut.Sort((x, y) => x.PhoneNumber.CompareTo(y.PhoneNumber));
                 string outfile = string.Join
                 (
                     Environment.NewLine, finalOut.Select(d => d.UserName + "," + "0" + d.PhoneNumber.ToString())
+
+               
+
                 );
                 System.IO.File.WriteAllText(OutPath.Text, outfile);
             }
@@ -91,7 +108,7 @@ namespace RangeFinder
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Label1_Click(object sender, EventArgs e)
         {
 
         }
@@ -110,6 +127,7 @@ namespace RangeFinder
         private void RangeListBrowser_Click(object sender, EventArgs e)
         {
             DialogResult result = openFileDialog1.ShowDialog();
+
             if (result == DialogResult.OK)
             {
                 RangeListPath.Text = openFileDialog1.FileName;
@@ -122,13 +140,17 @@ namespace RangeFinder
             if (result == DialogResult.OK)
             {
                 OutPath.Text = openFileDialog1.FileName;
+
+          
+
             }
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private void OpenFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
 
         }
+
 
         public List<User> ListModulo(List<long> rList, List<User> uList, List<User> outList)
         {
@@ -209,6 +231,9 @@ namespace RangeFinder
                 }
            
             return alreadyListed;
+
+
+
         }
 
     }
