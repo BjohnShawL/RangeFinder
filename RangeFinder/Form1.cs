@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,13 +16,22 @@ namespace RangeFinder
 
     public partial class Form1 : Form
     {
-        
+
         public Form1()
         {
             InitializeComponent();
-            
+
 
         }
+
+
+        private void Execute_click(object sender, EventArgs e)
+        {//Instantiate three lists on button click
+            List<long> rangeOutList = new List<long>();
+            List<User> userOutList = new List<User>();
+            List<User> finalOut;
+            List<User> fullOutList = new List<User>();
+
         
         private void ImportUserCsv_click(object sender, EventArgs e)
         {//Instantiate three lists on button click
@@ -30,15 +39,22 @@ namespace RangeFinder
             List<User>userOutList = new List<User>();
             List<User> finalOut;
 
+
             //check for data in the two boxes - if either is null, prompt for a filepath
 
-            if (UserListPath.Text != "" && RangeListPath.Text != "")
+            if (UserListPath.Text == "" || RangeListPath.Text == "" || OutPath.Text == "")
+            {
+                MessageBox.Show(@"Please enter the path of the Csv");
+            }
+            else
             {
                 CsvReader reader = new CsvReader(UserListPath.Text, RangeListPath.Text);
 
                 foreach (var rNum in reader.IntCsvList)
                 {
-                   var range = new Range(rNum);
+
+                    var range = new Range(rNum);
+
                     foreach (var _rNum in range.RangeList)
                     {
                         rangeOutList.Add(_rNum);
@@ -47,7 +63,9 @@ namespace RangeFinder
 
                 foreach (var rUse in reader.StrCsvList)
                 {
-                    var user = new User(rUse.Key,rUse.Value,false);
+
+                    var user = new User(rUse.Key, rUse.Value, false);
+
                     userOutList.Add(user);
                 }
 
@@ -69,21 +87,21 @@ namespace RangeFinder
                 //    }
                 //}
 
-                finalOut = ListModulo(userOutList, rangeOutList);
 
+                finalOut = ListModulo(rangeOutList, userOutList, fullOutList);
+                finalOut.Sort((x, y) => x.PhoneNumber.CompareTo(y.PhoneNumber));
                 string outfile = string.Join
                 (
-                    Environment.NewLine, finalOut.Select(d => d.UserName + "," + d.PhoneNumber)
+                    Environment.NewLine, finalOut.Select(d => d.UserName + "," + "0" + d.PhoneNumber.ToString())
+
+               
+
                 );
-                System.IO.File.WriteAllText("C: \\Users\\Ben.Liddle\\Desktop\\Scripting\\rangetest.csv", outfile);
-            }
-            else
-            {
-                MessageBox.Show(@"Please enter the path of the Csv");
+                System.IO.File.WriteAllText(OutPath.Text, outfile);
             }
         }
 
-        
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -109,9 +127,22 @@ namespace RangeFinder
         private void RangeListBrowser_Click(object sender, EventArgs e)
         {
             DialogResult result = openFileDialog1.ShowDialog();
+
             if (result == DialogResult.OK)
             {
                 RangeListPath.Text = openFileDialog1.FileName;
+            }
+        }
+
+        private void OutPathBrowser_Click(object sender, EventArgs e)
+        {
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                OutPath.Text = openFileDialog1.FileName;
+
+          
+
             }
         }
 
@@ -120,33 +151,89 @@ namespace RangeFinder
 
         }
 
-        public List<User> ListModulo(List<User> ulist, List<long> rList)
+
+        public List<User> ListModulo(List<long> rList, List<User> uList, List<User> outList)
         {
-            List<User> fullOutList = new List<User>();
-
-            foreach (var x in rList)
+            if (uList == null)
             {
-                var unUser = new User("Unassigned", x, false);
+                throw new ArgumentNullException(nameof(uList));
+            }
 
-                foreach (var user in ulist)
+
+
+            //foreach (var x in rList)
+            //{
+            //    var unUser = new User("Unassigned", x, false);
+
+            //    foreach (var user in uList)
+            //    {
+            //        if (user.PhoneNumber == unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
+            //        {
+            //           outList.Add(user);
+            //            user.Listed = true;
+            //            /*fullOutList.Add(unUser)*/
+            //        }
+            //        else if (user.PhoneNumber != unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
+            //        {
+            //            outList.Add(unUser);
+            //            unUser.Listed = true;
+
+            //        }
+            //        else { break; }
+            //    }
+            //}
+
+            foreach (var user in uList)
+            {
+                outList.Add(user);
+                user.Listed = true;
+
+                foreach (var x in rList)
                 {
-                    if (user.PhoneNumber == unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
+                    bool AlreadyListed = false;
+                    var unUser = new User("Unassigned", x, false);
+                    if (user.PhoneNumber != unUser.PhoneNumber && !Listed(outList,AlreadyListed,unUser))
                     {
-                        fullOutList.Add(user);
-                        user.Listed = true;
-                        /*fullOutList.Add(unUser)*/
-                    }
-                    else if (user.PhoneNumber != unUser.PhoneNumber && unUser.Listed == false && user.Listed == false)
-                    {
-                        fullOutList.Add(unUser);
+                        var y = existenceCheck(unUser,uList);
+                        if (y) continue;
                         unUser.Listed = true;
+                        outList.Add(unUser);
 
                     }
-                    else { break; }
+
                 }
             }
 
-            return fullOutList;
+            return outList;
+        }
+
+        private bool existenceCheck(User user, List<User> list)
+        {
+            bool existing = false;
+            foreach (var u in list)
+            {
+                if (u.PhoneNumber == user.PhoneNumber)
+                {
+                    existing = true;
+                }
+            }
+
+            return existing;
+        }
+
+        bool Listed(List<User> list, bool alreadyListed, User user)
+        {
+            
+            
+                foreach (var entry in list)
+                {
+                    if (entry.PhoneNumber == user.PhoneNumber) { alreadyListed = true;}
+                }
+           
+            return alreadyListed;
+
+
+
         }
 
     }

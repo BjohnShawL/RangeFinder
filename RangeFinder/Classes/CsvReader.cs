@@ -28,9 +28,11 @@ namespace RangeFinder.Classes
 
         public Dictionary<string,long> StrCsvList { get; set; }
 
-
+        //Method to create the dictionary for users
         public Dictionary<string, long> LoadStrCsv(string path)
-        {   List<string> jList = new List<string>();
+        {
+            
+            List<string> jList = new List<string>();
             Dictionary<string,long> dlist = new Dictionary<string, long>();          
             var reader = new StreamReader(File.OpenRead(path));
             List<string> searchList = new List<string>();
@@ -54,7 +56,11 @@ namespace RangeFinder.Classes
                     jSplit[1] = jSplit[1].Substring(index);
                     dlist.Add(jSplit[0], Convert.ToInt64(jSplit[1]));
                 }
-                else { dlist.Add(jSplit[0], Convert.ToInt64(jSplit[1]));}
+                else
+                {
+                    jSplit[1] = jSplit[1].Substring(5);
+                    dlist.Add(jSplit[0], Convert.ToInt64(jSplit[1]));
+                }
             }
             return dlist;
         }

@@ -36,6 +36,9 @@
             this.UserListBrowser = new System.Windows.Forms.Button();
             this.RangeListBrowser = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.OutPathBrowser = new System.Windows.Forms.Button();
+            this.OutPath = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // UserListPath
@@ -47,13 +50,16 @@
             // 
             // import_Csv_btn
             // 
-            this.import_Csv_btn.Location = new System.Drawing.Point(355, 205);
+            this.import_Csv_btn.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.import_Csv_btn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.import_Csv_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.import_Csv_btn.Location = new System.Drawing.Point(296, 285);
             this.import_Csv_btn.Name = "import_Csv_btn";
             this.import_Csv_btn.Size = new System.Drawing.Size(132, 23);
             this.import_Csv_btn.TabIndex = 4;
             this.import_Csv_btn.Text = "EXECUTE";
-            this.import_Csv_btn.UseVisualStyleBackColor = true;
-            this.import_Csv_btn.Click += new System.EventHandler(this.ImportUserCsv_click);
+            this.import_Csv_btn.UseVisualStyleBackColor = false;
+            this.import_Csv_btn.Click += new System.EventHandler(this.Execute_click);
             // 
             // RangeListPath
             // 
@@ -83,22 +89,24 @@
             // 
             // UserListBrowser
             // 
+            this.UserListBrowser.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.UserListBrowser.Location = new System.Drawing.Point(515, 70);
             this.UserListBrowser.Name = "UserListBrowser";
             this.UserListBrowser.Size = new System.Drawing.Size(75, 23);
             this.UserListBrowser.TabIndex = 7;
             this.UserListBrowser.Text = "Browse";
-            this.UserListBrowser.UseVisualStyleBackColor = true;
+            this.UserListBrowser.UseVisualStyleBackColor = false;
             this.UserListBrowser.Click += new System.EventHandler(this.UserListBrowser_Click);
             // 
             // RangeListBrowser
             // 
+            this.RangeListBrowser.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.RangeListBrowser.Location = new System.Drawing.Point(515, 137);
             this.RangeListBrowser.Name = "RangeListBrowser";
             this.RangeListBrowser.Size = new System.Drawing.Size(75, 23);
             this.RangeListBrowser.TabIndex = 8;
             this.RangeListBrowser.Text = "Browse";
-            this.RangeListBrowser.UseVisualStyleBackColor = true;
+            this.RangeListBrowser.UseVisualStyleBackColor = false;
             this.RangeListBrowser.Click += new System.EventHandler(this.RangeListBrowser_Click);
             // 
             // openFileDialog1
@@ -106,12 +114,42 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
             // 
+            // OutPathBrowser
+            // 
+            this.OutPathBrowser.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.OutPathBrowser.Location = new System.Drawing.Point(515, 232);
+            this.OutPathBrowser.Name = "OutPathBrowser";
+            this.OutPathBrowser.Size = new System.Drawing.Size(75, 23);
+            this.OutPathBrowser.TabIndex = 9;
+            this.OutPathBrowser.Text = "Browse";
+            this.OutPathBrowser.UseVisualStyleBackColor = false;
+            this.OutPathBrowser.Click += new System.EventHandler(this.OutPathBrowser_Click);
+            // 
+            // OutPath
+            // 
+            this.OutPath.Location = new System.Drawing.Point(249, 234);
+            this.OutPath.Name = "OutPath";
+            this.OutPath.Size = new System.Drawing.Size(238, 20);
+            this.OutPath.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(124, 241);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Output Path";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(731, 417);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.OutPath);
+            this.Controls.Add(this.OutPathBrowser);
             this.Controls.Add(this.RangeListBrowser);
             this.Controls.Add(this.UserListBrowser);
             this.Controls.Add(this.label2);
@@ -120,7 +158,7 @@
             this.Controls.Add(this.import_Csv_btn);
             this.Controls.Add(this.UserListPath);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "RangeFinder";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -136,6 +174,9 @@
         private System.Windows.Forms.Button UserListBrowser;
         private System.Windows.Forms.Button RangeListBrowser;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button OutPathBrowser;
+        private System.Windows.Forms.TextBox OutPath;
+        private System.Windows.Forms.Label label3;
     }
 }
 
